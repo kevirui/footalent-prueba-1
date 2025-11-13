@@ -18,8 +18,16 @@ export const ProductService = {
     return ProductRepository.create(data);
   },
 
-  getProducts: async () => {
-    return ProductRepository.findAll();
+  getProducts: async (options?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) => {
+    const page = Math.max(1, options?.page || 1);
+    const limit = Math.max(1, Math.min(100, options?.limit || 10));
+    const search = options?.search?.trim();
+
+    return ProductRepository.findAll({ page, limit, search });
   },
 
   getProductById: async (id: number) => {
