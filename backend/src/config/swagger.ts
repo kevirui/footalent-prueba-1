@@ -22,9 +22,13 @@ const swaggerDefinition: SwaggerDefinition = {
   },
   servers: [
     {
-      url: `http://${process.env.SWAGGER_HOST || "localhost:3000"}`,
+      url: `${process.env.SWAGGER_HOST}`,
       description: `${process.env.NODE_ENV || "Development"} server`,
     },
+    {
+      url: "localhost:3000",
+      description: `${process.env.NODE_ENV || "Development"} server`,
+    }
   ],
 };
 

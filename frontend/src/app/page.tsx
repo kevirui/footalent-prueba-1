@@ -24,9 +24,19 @@ export default function Home() {
           >
             Register
           </Link>
+
+       
+          
         </div>
         <UserList />{/* usar el nuevo componente aquí  */}
-      </div>
+    
+
+          <Link
+            href="/products"
+            className="bg-green-600 text-white inline-block px-5 py-2 text-lg font-medium rounded-2xl hover:bg-green-700 transition-colors"
+          >
+            Ver Productos
+          </Link>  </div>
     </section>
   );
 }

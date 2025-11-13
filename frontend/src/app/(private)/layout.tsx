@@ -3,9 +3,6 @@ import Logout from "@/src/components/Logout";
 import ClientGuard from "../guard/ClientGuard";
 import Link from "next/link";
 
-//siguiente tarea: agregar un logout button
-// import Logout from "@/components/Logout";
-
 
 export const metadata = {
   title: "Dashboard",
@@ -52,13 +49,14 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
             </div>
           </aside>
 
-          {/* Contenido Principal de la Página */}
-          <main className="flex-1 p-8 bg-gray-100 overflow-y-auto">
-            {children} {/* Aquí se renderiza  `page.tsx` de Productos */}
-          </main>
-        </div>
-
-      </ClientGuard>
-    </>
+        {/* Contenido Principal de la Página */}
+        <main className="flex-1 p-8 bg-gray-100 overflow-y-auto">
+          {children} {/* Aquí se renderiza  `page.tsx` de Productos */}
+        </main>
+      </div>
+      
+    </ClientGuard>
+   </>
+   //dato mockeado </ClientGuard> 
   );
 }

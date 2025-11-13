@@ -72,3 +72,66 @@ export const validateUserRegistration = (
 
   return next();
 };
+
+export const validateUserUpdate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password, name, role } = req.body ?? {};
+  const errors: string[] = [];
+
+  // Email validation (optional)
+  if (email !== undefined) {
+    if (!isValidEmail(email)) {
+      errors.push("El correo electrónico debe tener un formato válido");
+    } else {
+      req.body.email = (email as string).trim().toLowerCase();
+    }
+  }
+
+  // Password validation (optional)
+  if (password !== undefined) {
+    if (!isValidPassword(password)) {
+      errors.push(
+        "La contraseña debe tener al menos 8 caracteres e incluir letras y números"
+      );
+    } else {
+      req.body.password = (password as string).trim();
+    }
+  }
+
+  // Name validation (optional)
+  if (name !== undefined) {
+    const sanitizedName = sanitizeString(name);
+    if (!sanitizedName) {
+      errors.push(
+        "El nombre debe ser una cadena de texto no vacía cuando se proporciona"
+      );
+    } else {
+      req.body.name = sanitizedName;
+    }
+  }
+
+  // Role validation (optional)
+  if (role !== undefined) {
+    const candidate = String(role).trim().toUpperCase();
+    if (USER_ROLES.includes(candidate as AllowedRole)) {
+      req.body.role = candidate as AllowedRole;
+    } else {
+      errors.push(
+        "El rol proporcionado no es válido. Valores permitidos: ADMIN, USER"
+      );
+    }
+  }
+
+  if (errors.length > 0) {
+    return sendError(res, {
+      statusCode: 400,
+      message: "Datos de actualización inválidos",
+      errors,
+    });
+  }
+
+  return next();
+};

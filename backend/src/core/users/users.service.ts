@@ -37,8 +37,8 @@ export const UserService = {
   },
 
   //Obtener todos los usuarios
-  getAllUsers: async () => {
-    return UserRepository.findAll();
+  getAllUsers: async (page: number, limit: number) => {
+    return UserRepository.findAll(page, limit);
   },
 
   //Obtener un usuario por ID
@@ -63,16 +63,16 @@ export const UserService = {
   async login(email: string, password: string) {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) throw new AppError("Credenciales inválidas", 401);
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new AppError("Credenciales inválidas", 401);
-
+    
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET!,
       { expiresIn: "7d" }
     );
-
+    console.log("datos del user", user.id, user.role)
+    
     return {
       token,
       user: {
@@ -82,5 +82,40 @@ export const UserService = {
         role: user.role,
       },
     };
+  },
+
+  // Actualizar usuario
+
+  updateUser: async (id: string, data: Partial<{ email: string; name: string; role: UserRole; password: string }>) => {
+    const numericId = Number(id);
+    if (!Number.isInteger(numericId) || numericId <= 0) {
+      throw new AppError("ID de usuario inválido", 400);
+    }
+
+    const existingUser = await UserRepository.findById(numericId);
+    if (!existingUser) throw new AppError("Usuario no encontrado", 404);
+
+    if (data.role && !USER_ROLES.includes(data.role)) {
+      throw new AppError("Rol de usuario inválido", 400);
+    }
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10); // Hash de la nueva contraseña
+    }
+
+    return UserRepository.update(numericId, data);
+  },
+
+  // Eliminar usuario
+  deleteUser: async (id: string) => {
+    const numericId = Number(id);
+    if (!Number.isInteger(numericId) || numericId <= 0) {
+      throw new AppError("ID de usuario inválido", 400);
+    }
+
+    const existingUser = await UserRepository.findById(numericId);
+    if (!existingUser) throw new AppError("Usuario no encontrado", 404);
+
+    return UserRepository.delete(numericId);
   },
 };

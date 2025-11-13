@@ -32,7 +32,8 @@ describe("UserService - createUser", () => {
     const user = await UserService.createUser(
       "test@example.com",
       "Test",
-      "USER"
+      "USER",
+      "Passw0rd123"
     );
 
     expect(user).toEqual({
@@ -41,16 +42,18 @@ describe("UserService - createUser", () => {
       name: "Test",
       role: "USER",
     });
+
     expect(UserRepository.create).toHaveBeenCalledTimes(1);
     expect(UserRepository.create).toHaveBeenCalledWith(
       "test@example.com",
       "Test",
-      "USER"
+      "USER",
+      "Passw0rd123"
     );
   });
 
   it("debe lanzar error si el email no está presente", async () => {
-    const promise = UserService.createUser("", "Test", "USER");
+    const promise = UserService.createUser("", "Test", "USER", "Passw0rd123");
 
     await expect(promise).rejects.toBeInstanceOf(AppError);
     await expect(promise).rejects.toEqual(
@@ -64,7 +67,12 @@ describe("UserService - createUser", () => {
   it("debe lanzar error si el usuario ya existe", async () => {
     (UserRepository.findByEmail as jest.Mock).mockResolvedValue({ id: 1 });
 
-    const promise = UserService.createUser("test@example.com", "Test", "USER");
+    const promise = UserService.createUser(
+      "test@example.com",
+      "Test",
+      "USER",
+      "Passw0rd123"
+    );
 
     await expect(promise).rejects.toBeInstanceOf(AppError);
     await expect(promise).rejects.toEqual(
@@ -81,7 +89,8 @@ describe("UserService - createUser", () => {
     const promise = UserService.createUser(
       "test@example.com",
       "Test",
-      "SUPERUSER" as any
+      "SUPERUSER" as any,
+      "Passw0rd123"
     );
 
     await expect(promise).rejects.toBeInstanceOf(AppError);
@@ -93,3 +102,4 @@ describe("UserService - createUser", () => {
     );
   });
 });
+
