@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import { sendSuccess } from "@utils/httpResponses";
+import { sendSuccess } from "../utils";
 import {
   authenticateToken,
   AuthenticatedRequest,

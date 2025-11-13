@@ -1,4 +1,4 @@
-import { AppError } from "@utils/errors";
+import { AppError } from "../../utils";
 import { ProductRepository } from "./products.repository";
 
 export const ProductService = {

@@ -1,5 +1,5 @@
 import { ProductService } from "@core/products/products.service";
-import { sendSuccess, sendError } from "@utils/httpResponses";
+import { sendSuccess, sendError } from "../../../src/utils";
 import {
   createProductController,
   getProductsController,
@@ -28,7 +28,7 @@ describe("Product Controllers", () => {
     stock: 5,
     createdAt: new Date(),
     updatedAt: new Date(),
-    ...overrides
+    ...overrides,
   });
 
   // Crear
@@ -36,7 +36,7 @@ describe("Product Controllers", () => {
     S.createProduct.mockResolvedValue(mockDbProduct());
 
     const req: any = {
-      body: { name: "A", code: "C1", price: 10, stock: 5 }
+      body: { name: "A", code: "C1", price: 10, stock: 5 },
     };
 
     await createProductController(req, fakeRes);

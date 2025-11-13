@@ -6,7 +6,7 @@ import {
   updateProductController,
   deleteProductController,
 } from "./products.controller";
-import { validate } from "@/utils/validate";
+import { validate } from "../../utils";
 import { productSchema } from "./products.validation";
 
 const router = Router();
