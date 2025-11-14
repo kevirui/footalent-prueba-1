@@ -660,7 +660,7 @@ router.post("/refresh-token", validateRefreshToken, refreshTokenController);
 
 /**
  * @swagger
- * /api/users/getAllUsers:
+ * /api/users:
  *   get:
  *     summary: Obtener todos los usuarios (solo admin)
  *     tags: [Users]
