@@ -16,7 +16,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
    
    
     //dato mockeado <ClientGuard>   
-   <ClientGuard>  
+   <>  {/*para evitar iniciar sesion solo <></> */}
     
       {/* flexbox para crear el layout de Sidebar + Contenido */}
       <div className="flex min-h-screen">
@@ -61,6 +61,6 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
       </div>
       
     
-    </ClientGuard>
+    </>
   );
 }

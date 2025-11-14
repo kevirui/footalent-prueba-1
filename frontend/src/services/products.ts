@@ -56,7 +56,12 @@ const normalizePaginationMeta = (
         page: meta.page ?? fallbackPage,
         limit: meta.limit ?? fallbackLimit,
         totalItems: meta.totalItems ?? items.length,
-        totalPages: meta.totalPages ?? Math.max(1, Math.ceil((meta.totalItems ?? items.length) / (meta.limit ?? fallbackLimit))),
+        totalPages:
+          meta.totalPages ??
+          Math.max(
+            1,
+            Math.ceil((meta.totalItems ?? items.length) / (meta.limit ?? fallbackLimit))
+          ),
       },
     };
   }
@@ -94,31 +99,51 @@ export async function listProducts({
   limit: number;
   search?: string;
 }): Promise<{ items: Product[]; meta: PaginationMeta; message: string }> {
-  const params = new URLSearchParams();
-  params.set("page", page.toString());
-  params.set("limit", limit.toString());
-  if (search && search.trim().length > 0) {
-    params.set("search", search.trim());
-  }
-
-  const endpoint = `${PRODUCTS_ENDPOINT}?${params.toString()}`;
+  
   const response = await apiRequest<ApiSuccessResponse<ProductListData>>(
-    endpoint
+    PRODUCTS_ENDPOINT
   );
 
   if (!response.success) {
     throw new Error(response.message || "No fue posible obtener los productos");
   }
 
-  const { items, meta } = normalizePaginationMeta(
+
+  const { items: allItems } = normalizePaginationMeta(
     response.data,
-    page,
-    limit
+    1,
+    Number.MAX_SAFE_INTEGER
   );
 
+  
+  let filteredItems = allItems;
+  if (search && search.trim().length > 0) {
+    const query = search.toLowerCase().trim();
+    filteredItems = allItems.filter(
+      (p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.code.toLowerCase().includes(query)
+    );
+  }
+
+  
+  const totalItems = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+  const currentPage = Math.min(Math.max(1, page), totalPages);
+  
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = startIndex + limit;
+  
+  const paginatedItems = filteredItems.slice(startIndex, endIndex);
+
   return {
-    items,
-    meta,
+    items: paginatedItems,
+    meta: {
+      page: currentPage,
+      limit,
+      totalItems,
+      totalPages,
+    },
     message: response.message,
   };
 }
@@ -180,4 +205,3 @@ export async function deleteProduct(id: number): Promise<void> {
     throw new Error(response.message || "No fue posible eliminar el producto");
   }
 }
-
