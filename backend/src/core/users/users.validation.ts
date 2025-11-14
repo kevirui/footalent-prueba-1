@@ -3,11 +3,9 @@ import {
   isValidEmail,
   isValidPassword,
   sanitizeString,
-} from "@utils/validators";
-import { sendError } from "@utils/httpResponses";
+  sendError,
+} from "../../utils";
 import { USER_ROLES, UserRole } from "./users.types";
-
-type AllowedRole = UserRole;
 
 export const validateUserRegistration = (
   req: Request,
@@ -44,12 +42,12 @@ export const validateUserRegistration = (
   }
 
   // Role validation (optional, defaults to USER)
-  let normalizedRole: AllowedRole = "USER";
+  let normalizedRole: UserRole = "USER";
 
   if (role !== undefined) {
     const candidate = String(role).trim().toUpperCase();
-    if (USER_ROLES.includes(candidate as AllowedRole)) {
-      normalizedRole = candidate as AllowedRole;
+    if (USER_ROLES.includes(candidate as UserRole)) {
+      normalizedRole = candidate as UserRole;
     } else {
       errors.push(
         "El rol proporcionado no es válido. Valores permitidos: ADMIN, USER"
@@ -116,8 +114,8 @@ export const validateUserUpdate = (
   // Role validation (optional)
   if (role !== undefined) {
     const candidate = String(role).trim().toUpperCase();
-    if (USER_ROLES.includes(candidate as AllowedRole)) {
-      req.body.role = candidate as AllowedRole;
+    if (USER_ROLES.includes(candidate as UserRole)) {
+      req.body.role = candidate as UserRole;
     } else {
       errors.push(
         "El rol proporcionado no es válido. Valores permitidos: ADMIN, USER"
@@ -133,5 +131,30 @@ export const validateUserUpdate = (
     });
   }
 
+  return next();
+};
+
+export const validateRefreshToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { refreshToken } = req.body ?? {};
+
+  if (
+    typeof refreshToken !== "string" ||
+    !refreshToken ||
+    !refreshToken.trim()
+  ) {
+    return sendError(res, {
+      statusCode: 400,
+      message: "Refresh token inválido",
+      errors: [
+        "El campo refreshToken es obligatorio y debe ser una cadena no vacía",
+      ],
+    });
+  }
+
+  req.body.refreshToken = refreshToken.trim();
   return next();
 };

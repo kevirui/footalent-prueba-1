@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import testRoutes from "./test.routes";
 import userRoutes from "@core/users/user.routes";
 import productRoutes from "@core/products/products.routes";
-import { sendSuccess } from "@utils/httpResponses";
+import { sendSuccess } from "../utils";
 
 const router: Router = Router();
 
@@ -24,6 +24,10 @@ const router: Router = Router();
  *           type: string
  *           nullable: true
  *           example: "María García"
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: "Password123"
  *         role:
  *           type: string
  *           enum: [USER, ADMIN]

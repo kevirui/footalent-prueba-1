@@ -5,7 +5,7 @@ import {
   updateUserController,
 } from "@core/users/users.controller";
 import { UserService } from "@core/users/users.service";
-import { AppError } from "@utils/errors";
+import { AppError } from "../../../src/utils";
 
 jest.mock("@config/database", () => ({
   __esModule: true,
@@ -45,11 +45,27 @@ describe("Users Controller", () => {
 
   // Crear usuario
   it("debe devolver 201 al crear un usuario correctamente", async () => {
-    req.body = { email: "test@example.com", name: "Miguel", role: "ADMIN", password: "Passw0rd123" };
+    req.body = {
+      email: "test@example.com",
+      name: "Miguel",
+      role: "ADMIN",
+      password: "Passw0rd123",
+    };
 
-    (UserService.createUser as jest.Mock).mockResolvedValue(mockDbUser({ role: "ADMIN" }));
+    (UserService.createUser as jest.Mock).mockResolvedValue(
+      mockDbUser({ role: "ADMIN" })
+    );
 
     await createUserController(req, res);
+
+    expect(UserService.createUser).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: "test@example.com",
+        name: "Miguel",
+        role: "ADMIN",
+        password: "Password123",
+      })
+    );
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({

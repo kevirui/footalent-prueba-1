@@ -1,4 +1,4 @@
-import { controllerHandler } from "@utils/controllerHandler";
+import { controllerHandler } from "../../utils";
 import { ProductService } from "./products.service";
 
 export const createProductController = controllerHandler(

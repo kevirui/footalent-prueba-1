@@ -3,9 +3,8 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "@config/swagger";
 import routes from "@routes/index";
-import { sendError } from "@utils/httpResponses";
-import { isAppError } from "@utils/errors";
 import { corsMiddleware, corsPreflightMiddleware } from "@config/cors";
+import { isAppError, sendError } from "./utils";
 
 // Load environment variables
 dotenv.config();
