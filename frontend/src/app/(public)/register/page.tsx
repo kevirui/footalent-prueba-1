@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRegister } from "@/src/hooks/useRegister";
 import { useRouter } from "next/navigation";
+import { isValidEmail, emailInvalidMessage } from "@/src/utils/validators";
 
 interface RegisterFormInputs {
   name: string;
@@ -98,8 +99,11 @@ const Register: React.FC = () => {
                 required: "Este campo es obligatorio",
                 pattern: {
                   value: /\S+@\S+\.\S+/,
-                  message: "Proporcione un correo electrónico válido.",
+                  message:
+                    "Por favor, proporcione una dirección de correo electrónico válida.",
                 },
+                validate: (value: string) =>
+                  isValidEmail(value) || emailInvalidMessage,
               })}
             />
           </FormRow>

@@ -26,11 +26,11 @@ practica-app/
 
 # Miembros del grupo
 
-| Name                 | GitHub           | Role                      |
-| -------------------- | ---------------- | ------------------------- |
-| _Ale Fernández_      | _alefernandez88_ | _(Frontend / Full-stack)_ |
-| _Kevin Agustin Ruiz_ | _kevirui_        | _(Backend / Full-stack)_  |
-| _Luana Trevisan_     | _luut04_         | _(Frontend / Full-stack)_ |
-| _Miguel Aponte_      | _XCODE89_        | _(Backend / Full-stack)_  |
-| _Edwin Carmona_      | _ecc97_          | _(Frontend)_              |
-|                      |                  |                           |
+| Name                  | GitHub           | Role                      |
+|-----------------------|------------------|---------------------------|
+| _Ale Fernández_       | _alefernandez88_ | _(Frontend / Full-stack)_ |
+| _Kevin Agustin Ruiz_  | _kevirui_        | _(Backend / Full-stack)_  |
+| _Luana Trevisan_      | _luut04_         | _(Frontend / Full-stack)_ |
+| _Miguel Aponte_       | _XCODE89_        | _(Backend / Full-stack)_  |
+| _Edwin Carmona_       | _ecc97_          | _(Frontend)_              |
+| Eliana Suancha Guzman | elianisdev       | (Frontend)                |

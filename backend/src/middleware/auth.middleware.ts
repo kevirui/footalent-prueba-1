@@ -5,7 +5,7 @@ import jwt, {
   TokenExpiredError,
 } from "jsonwebtoken";
 import type { UserRole } from "@core/users/users.types";
-import { AppError } from "@utils/errors";
+import { AppError } from "../utils";
 
 export interface TokenPayload extends JwtPayload {
   id?: string;

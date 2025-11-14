@@ -5,6 +5,7 @@ import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import FormRow from "@/src/components/FormRow";
 import SubmitButton from "@/src/components/SubmitButton";
 import Link from "next/link";
+import { emailInvalidMessage, isValidEmail } from "@/src/utils/validators";
 
 //const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));  //esta linea sirve para visualizar la carga
 
@@ -90,6 +91,8 @@ const Login: React.FC = () => {
                   message:
                     "Por favor, proporcione una dirección de correo electrónico válida.",
                 },
+                validate: (value: string) =>
+                  isValidEmail(value) || emailInvalidMessage,
               })}
             />
           </FormRow>
