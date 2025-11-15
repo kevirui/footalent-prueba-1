@@ -55,12 +55,16 @@ const Register: React.FC = () => {
           router.push("/login");
         }, 1500);
       } else {
-        console.error("❌ Error en el registro:", result?.message);
-        setErrorMessage(result?.message || "Error desconocido al registrar");
+        let errorMsg = result?.message || "Error desconocido al registrar";
+        if (result?.statusCode === 409 || result?.message === "El usuario ya existe") {
+          errorMsg = "El email ya está registrado";
+        }
+
+        setErrorMessage(errorMsg);
       }
-    } catch (error: any) {
-      console.error("❌ Error inesperado:", error.message);
-      setErrorMessage(error.message || "Error desconocido");
+    } catch (error: unknown) {
+      const errorResponse = error as Error;
+      setErrorMessage(errorResponse?.message || "Error desconocido");
     }
   };
 

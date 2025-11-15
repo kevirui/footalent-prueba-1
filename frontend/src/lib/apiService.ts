@@ -1,4 +1,4 @@
-import { IRegisterData, ILoginData, ILoginResponse, IApiResponse } from "../types/auth";
+import { IRegisterData, ILoginData, ILoginResponse, IApiResponse, ApiError } from "../types/auth";
 
 export async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
     try {
@@ -20,17 +20,13 @@ export async function apiRequest<T>(endpoint: string, options?: RequestInit): Pr
             ...options,
         });
 
-        if (!response.ok) {
-            const body = await response.json().catch(() => null);
-            const message = body?.message || `API request failed with status: ${response.status}`;
-            throw new Error(message);
-        }
+        const body = await response.json().catch(() => null);
 
-        return (await response.json()) as T;
+        return body as T;
 
     } catch (error: unknown) {
         if (error instanceof Error) {
-            throw new Error(`API request failed with error: ${error.message}`);
+            throw error;
         } else {
             throw new Error(`API request failed with unknown error`);
         }
@@ -40,19 +36,26 @@ export async function apiRequest<T>(endpoint: string, options?: RequestInit): Pr
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
 
 export const registerUser = async (data: IRegisterData): Promise<IApiResponse> => {
-    const result = await apiRequest<IApiResponse>(`${API_URL}/users/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-    });
+    try {
+        const result = await apiRequest<IApiResponse>(`${API_URL}/users/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
 
-    console.log("📦 Respuesta del backend (registerUser):", result);
-
-    if (!result.success) {
-        throw new Error(result.message || "Error al registrarse");
+        console.log("📦 Respuesta del backend (registerUser):", result);
+        return result;
+    } catch (error: unknown) {
+        const errorResponse = error as ApiError;
+        console.error("❌ Error en registerUser:", error);
+        
+        return {
+            success: false,
+            statusCode: errorResponse.statusCode || 500,
+            message: errorResponse.message || "Error al registrarse",
+            errors: errorResponse?.errors,
+        };
     }
-
-    return result;
 };
 
 export const loginUser = async (data: ILoginData): Promise<ILoginResponse> => {
