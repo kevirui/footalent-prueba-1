@@ -5,9 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "prisma:migrate": "prisma migrate dev",
-    "build": "npm run prisma:generate && tsc && (tsc-alias || echo 'tsc-alias not found, skipping alias fix')",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/server.ts",
+    "build": "node init && npm run prisma:generate && tsc && (tsc-alias || echo 'tsc-alias not found, skipping alias fix')",
+    "start": "node init && node dist/server.js",
+    "dev": "node init && ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/server.ts",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "prisma:seed": "ts-node prisma/seed.ts",
