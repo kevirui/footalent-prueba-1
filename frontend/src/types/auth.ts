@@ -25,3 +25,9 @@ export interface ILoginResponse {
         user: { id: string | number; email: string; name?: string; role?: string };
     };
 }
+
+export interface ApiError extends Error {
+    statusCode?: number;
+    success?: boolean;
+    errors?: string[];
+}
