@@ -14,11 +14,15 @@ export const useRegister = () => {
             const result = await registerUser(data);
             setResponse(result);
             return result;
-        } catch (error: any) {
-            setResponse({
-                success: false,
-                message: error.message || "Error desconocido",
-            });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                const errorResponse = {
+                    success: false,
+                    statusCode: 500,
+                    message: error.message || "Error desconocido",
+                };
+                setResponse(errorResponse);
+            }
         } finally {
             setLoading(false);
         }
